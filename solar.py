@@ -1,9 +1,9 @@
 import csv
 import matplotlib.pyplot as plt
 
-solar_panel_size = 0.19 #m^2
-battery_capacity = 100 #Wh
-cycle_usage = 5.46 #Wh
+solar_panel_size = 0.2 #m^2
+battery_capacity = 125 #Wh
+cycle_usage = 5.4750 #Wh
 lower_limit = battery_capacity*0.2 #Wh
 step_size = 15 #mins
 step_size_hrs = step_size/60 #hrs
@@ -14,7 +14,7 @@ charges = [charge]
 times = [0] #init at time zero
 sun_data = []
 
-#please ensure data is in CSV format
+#read data from CSV
 with open('Solar Power Data.csv') as csv_file:
     csv_reader = csv.reader(csv_file, delimiter=',')
     next(csv_reader) #skip header
@@ -23,7 +23,7 @@ with open('Solar Power Data.csv') as csv_file:
 
 for data in sun_data:
     gain = solar_panel_size*int(data[2])*step_size_hrs*efficiency 
-    charge += gain #increase charge based on solar irradiance, solar panel size and efficiency
+    charge += gain #increase charge based on solar irradiance data, solar panel size and efficiency
     if (charge>battery_capacity): #check if maximum capacity has been reached
         charge = battery_capacity
     if data[3] == "1": #check if a plug-in cycle is to occur
@@ -32,13 +32,16 @@ for data in sun_data:
         print(r"Warning less than 20% capacity on day", data[0], "at", data[1]) #alert human
     charges.append(charge)
 
+#generate time array
 for i in range(0, len(sun_data)):
     times.append(times[i]+step_size)
 
+#generate lower limit array
 lower_limit_plot = [] 
 for i in times:
     lower_limit_plot.append(lower_limit)
 
+#generate time labels every 6 hours
 tick_locs = []
 time_labels = []
 for i in range(0,len(sun_data)):
@@ -48,6 +51,7 @@ for i in range(0,len(sun_data)):
 
 plt.plot(times,charges,'.-')
 plt.plot(times,lower_limit_plot)
+plt.title("Battery capacity over 7 days of continuous operation")
 plt.xticks(tick_locs,time_labels,rotation=60)
 plt.ylabel("Battery Capacity (Wh)")
 plt.legend(["Battery Capacity","20% Capacity Limit"])
