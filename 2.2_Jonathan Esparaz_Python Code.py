@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 
 solar_panel_size = 0.25 #m^2
 battery_capacity = 198 #Wh
-cycle_usage = 5.4933 #Wh
+cycle_usage = 5.4675 #Wh
 lower_limit = battery_capacity*0.2 #Wh
 step_size = 15 #mins
 step_size_hrs = step_size/60 #hrs
